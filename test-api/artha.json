@@ -3,6 +3,11 @@
   "version": "1.0.0",
   "srcDir": "src",
   "server": {
-    "port": 8080
+    "port": 1302
+  },
+  "dependencies": {
+    "lombok": "1.18.30",
+    "gson": "2.10.1",
+    "com.fasterxml.jackson.core:jackson-databind": "2.16.1"
   }
 }

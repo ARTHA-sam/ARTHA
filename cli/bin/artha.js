@@ -33,6 +33,14 @@ program
     .action(() => {
         require('../src/commands/build')();
     });
+// after other requires
+program
+    .command('add <package>')
+    .description('Add a dependency to your project')
+    .option('-v, --version <version>', 'Specify version')
+    .action((packageName, options) => {
+        require('../src/commands/add')(packageName, options.version);
+    });
 
 // Show help if no command
 if (process.argv.length === 2) {

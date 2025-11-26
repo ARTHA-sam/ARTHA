@@ -23,7 +23,9 @@ public class Runtime {
     public static void main(String[] args) {
         printBanner();
 
+        // Get port from CLI -Dartha.port or default 8080
         int port = Integer.parseInt(System.getProperty("artha.port", "8080"));
+        System.out.println("ℹ️  Using port: " + port + "\n");
 
         Javalin app = Javalin.create(config -> {
             config.showJavalinBanner = false;
@@ -35,7 +37,7 @@ public class Runtime {
             });
         });
 
-        // ✅ FIXED: Proper classpath scanning
+        // Scan for @Step annotations
         System.out.println("🔍 Scanning for routes...\n");
 
         Reflections reflections = new Reflections(
