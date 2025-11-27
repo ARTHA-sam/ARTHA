@@ -22,18 +22,19 @@ While Python developers enjoy Flask and FastAPI's "just write code" philosophy, 
 
 ## 🤯 Why ARTHA is "Mad" (Insanely Cool)
 
-### 1. **Zero-Boilerplate Code**
-Write a complete REST API in seconds:
+### 1. **Zero-Boilerplate Code with @Step Annotation**
+Write complete API endpoints with just the `@Step` annotation:
 
 ```java
-@Get("/") String home() { return "Hello from ARTHA!"; }
-
-@Post("/sum") int sum(@Body Numbers n) { return n.a + n.b; }
-
-class Numbers { int a; int b; }
+@Step(path = "/namaste", method = "GET")
+public class Hello {
+    public String handle(Request req, Response res) {
+        return "Namaste, World!";
+    }
+}
 ```
 
-**No imports. No main() method. No class wrappers. It just works.**
+**No imports needed. No main() method. No class wrappers. It just works.**
 
 ### 2. **Blazingly Fast Setup**
 - ⚡ **< 3 seconds startup** (vs. Spring Boot's 30+ seconds)
@@ -49,7 +50,7 @@ class Numbers { int a; int b; }
 The framework automatically:
 - Detects your Java files
 - Compiles code in the background
-- Scans for route annotations (@Get, @Post, etc.)
+- Scans for @Step annotations
 - Starts your server at http://localhost:8080
 
 ### 5. **Flexible Architecture**
@@ -64,13 +65,13 @@ Scale from minimalist to enterprise
 
 ## ✨ Key Features
 
-- Single-File Backend
-- No main() Required
-- Hot Reload
-- Zero Configuration
-- IDE Friendly (VS Code & IntelliJ)
-- JSON Configuration
-- Intuitive Annotations (@Get, @Post, @Put, @Delete)
+- **Single-File Backend** - Start with just one `.java` file
+- **No main() Required** - ARTHA handles the entry point
+- **Hot Reload** - Dev server reloads on file changes
+- **Zero Configuration** - No XML, no complex setup
+- **IDE Friendly** - Works in VS Code & IntelliJ IDEA
+- **JSON Config** - Simple `artha.json` for settings
+- **@Step Annotation** - Simple route definition
 
 ---
 
@@ -123,28 +124,73 @@ Manage your app via **artha.json**:
 ```json
 {
   "port": 8080,
-  "env": "dev",
-  "dependencies": ["lombok", "postgresql"]
+  "env": "dev"
 }
 ```
 
 ---
 
-## 📡 API Reference
+## 📡 @Step Annotation Reference
 
-### HTTP Method Annotations
+### Basic Usage
 
-- `@Get(path)` - HTTP GET requests
-- `@Post(path)` - HTTP POST requests  
-- `@Put(path)` - HTTP PUT requests
-- `@Delete(path)` - HTTP DELETE requests
-- `@Route(verb, path)` - Custom HTTP verbs
+The `@Step` annotation marks a class as an API endpoint:
+
+```java
+@Step(path = "/hello", method = "GET")
+public class HelloEndpoint {
+    public String handle(Request req, Response res) {
+        return "Hello, World!";
+    }
+}
+```
+
+### Annotation Parameters
+
+- `path` (required): The URL path for the endpoint (e.g., "/users", "/api/products")
+- `method` (optional): HTTP method (default: "GET") - supports GET, POST, PUT, DELETE, etc.
+
+### Method Signature
+
+Your handler method receives:
+- `Request req`: Contains query parameters, headers, request data
+- `Response res`: Used to set response headers or status codes
+- Returns: Response body (String, JSON, etc.)
+
+### Examples
+
+```java
+// GET endpoint
+@Step(path = "/greet", method = "GET")
+public class GreetHandler {
+    public String handle(Request req, Response res) {
+        String name = req.query("name", "Guest");
+        return "Hello, " + name + "!";
+    }
+}
+
+// POST endpoint
+@Step(path = "/users", method = "POST")
+public class CreateUserHandler {
+    public String handle(Request req, Response res) {
+        // Process POST data
+        return "{\"id\": 1, \"created\": true}";
+    }
+}
+
+// Dynamic path
+@Step(path = "/users/:id", method = "GET")
+public class GetUserHandler {
+    public String handle(Request req, Response res) {
+        String userId = req.pathParam("id");
+        return "{\"id\": " + userId + "}";
+    }
+}
+```
 
 ---
 
 ## 🎯 Why Choose ARTHA?
-
-Compared to Spring Boot: Setup < 1 min vs 5-10 mins, zero boilerplate vs high, very fast startup vs slow
 
 **For Students**: Learn backend without fighting configuration
 **For Hackathons**: Spin up APIs in seconds
@@ -154,14 +200,14 @@ Compared to Spring Boot: Setup < 1 min vs 5-10 mins, zero boilerplate vs high, v
 
 ## 🛣️ Roadmap
 
-- [ ] Dependency Auto-installer
-- [ ] Web Postman UI
-- [ ] VS Code Extension
-- [ ] IntelliJ Plugin
-- [ ] Database Helpers
-- [ ] JWT Auth Middleware
-- [ ] Docker Support
-- [ ] OpenAPI Generation
+- [ ] Request/Response body auto-parsing
+- [ ] Error handling middleware
+- [ ] Database helpers
+- [ ] JWT Auth support
+- [ ] WebSocket support
+- [ ] Docker integration
+- [ ] OpenAPI generation
+- [ ] Built-in testing framework
 
 ---
 
